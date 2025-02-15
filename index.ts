@@ -96,6 +96,21 @@ const server = new McpServer({
       "delete-issue-relation": {
         description: "Delete a relation between two issues",
       },
+      "link-project-to-initiative": {
+        description: "Link a project to an initiative",
+      },
+      "view-initiative-projects": {
+        description: "View projects associated with an initiative",
+      },
+      "unlink-project-from-initiative": {
+        description: "Unlink a project from an initiative",
+      },
+      "list-initiatives": {
+        description: "List all initiatives in the workspace",
+      },
+      "list-projects": {
+        description: "List all projects in the workspace",
+      },
     },
   },
 })
@@ -278,6 +293,41 @@ server.tool(
       }
     } catch (error: unknown) {
       return handleError(error, "updating initiative")
+    }
+  },
+)
+
+server.tool(
+  "list-initiatives",
+  {
+    includeArchived: z.boolean().optional(),
+  },
+  async ({ includeArchived }) => {
+    try {
+      const initiatives = await linearClient.initiatives({
+        includeArchived,
+      })
+      
+      // Format the initiatives to show relevant information
+      const formattedInitiatives = initiatives.nodes.map(initiative => ({
+        id: initiative.id,
+        name: initiative.name,
+        description: initiative.description,
+        status: initiative.status,
+        health: initiative.health,
+        targetDate: initiative.targetDate,
+      }))
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(formattedInitiatives, null, 2),
+          },
+        ],
+      }
+    } catch (error: unknown) {
+      return handleError(error, "listing initiatives")
     }
   },
 )
@@ -522,6 +572,151 @@ server.tool(
       }
     } catch (error: unknown) {
       return handleError(error, "deleting issue relation")
+    }
+  },
+)
+
+// Project-Initiative relationship tools
+server.tool(
+  "link-project-to-initiative",
+  {
+    projectId: z.string(),
+    initiativeId: z.string(),
+  },
+  async ({ projectId, initiativeId }) => {
+    try {
+      const initiative = await linearClient.initiative(initiativeId)
+      const projects = await initiative.projects()
+      const existingLink = projects.nodes.find(project => project.id === projectId)
+      
+      if (existingLink) {
+        throw new Error("Project is already linked to this initiative")
+      }
+
+      await linearClient.createInitiativeToProject({
+        initiativeId,
+        projectId,
+      })
+      return {
+        content: [
+          {
+            type: "text",
+            text: "Project successfully linked to initiative",
+          },
+        ],
+      }
+    } catch (error: unknown) {
+      return handleError(error, "linking project to initiative")
+    }
+  },
+)
+
+server.tool("view-initiative-projects", { initiativeId: z.string() }, async ({ initiativeId }) => {
+  try {
+    const initiative = await linearClient.initiative(initiativeId)
+    const projects = await initiative.projects()
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(projects.nodes, null, 2),
+        },
+      ],
+    }
+  } catch (error: unknown) {
+    return handleError(error, "viewing initiative projects")
+  }
+})
+
+server.tool(
+  "unlink-project-from-initiative",
+  {
+    projectId: z.string(),
+    initiativeId: z.string(),
+  },
+  async ({ projectId, initiativeId }) => {
+    try {
+      const initiative = await linearClient.initiative(initiativeId)
+      const projects = await initiative.projects()
+      const existingProject = projects.nodes.find(project => project.id === projectId)
+      
+      if (!existingProject) {
+        throw new Error("Project is not linked to this initiative")
+      }
+
+      // Get all initiative-project links
+      const links = await linearClient.initiativeToProjects()
+      const linkToDelete = await Promise.all(
+        links.nodes.map(async link => {
+          const initiative = await link.initiative
+          const project = await link.project
+          if (!initiative || !project) return null
+          return initiative.id === initiativeId && project.id === projectId ? link : null
+        })
+      ).then(results => results.find(result => result !== null))
+      
+      if (!linkToDelete) {
+        throw new Error("Initiative-project link not found")
+      }
+
+      await linearClient.deleteInitiativeToProject(linkToDelete.id)
+      return {
+        content: [
+          {
+            type: "text",
+            text: "Project successfully unlinked from initiative",
+          },
+        ],
+      }
+    } catch (error: unknown) {
+      return handleError(error, "unlinking project from initiative")
+    }
+  },
+)
+
+server.tool(
+  "list-projects",
+  {
+    includeArchived: z.boolean().optional(),
+    state: z
+      .enum(["planned", "started", "paused", "completed", "canceled"])
+      .optional(),
+  },
+  async ({ includeArchived, state }) => {
+    try {
+      const projects = await linearClient.projects({
+        includeArchived,
+        filter: state ? { state: { eq: state } } : undefined,
+      })
+      
+      // Format the projects to show relevant information
+      const formattedProjects = await Promise.all(
+        projects.nodes.map(async project => {
+          const initiative = project.initiatives ? (await project.initiatives()).nodes[0] : null
+          return {
+            id: project.id,
+            name: project.name,
+            description: project.description,
+            state: project.state,
+            progress: project.progress,
+            startDate: project.startDate,
+            targetDate: project.targetDate,
+            initiativeId: initiative?.id,
+            initiativeName: initiative?.name,
+          }
+        })
+      )
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(formattedProjects, null, 2),
+          },
+        ],
+      }
+    } catch (error: unknown) {
+      return handleError(error, "listing projects")
     }
   },
 )
