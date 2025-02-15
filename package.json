@@ -1,0 +1,39 @@
+{
+  "name": "linear-mcp-server",
+  "version": "1.0.0",
+  "description": "A MCP server for Linear",
+  "main": "index.ts",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"**/*.{ts,json}\"",
+    "format:check": "prettier --check \"**/*.{ts,json}\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@linear/sdk": "^38.0.0",
+    "@modelcontextprotocol/sdk": "^1.5.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@typescript-eslint/eslint-plugin": "^8.24.0",
+    "@typescript-eslint/parser": "^8.24.0",
+    "@eslint/js": "^9.19.0",
+    "@types/eslint__js": "^8.42.3",
+    "@tsconfig/node22": "^22.0.0",
+    "eslint": "^9.19.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "prettier": "^3.5.1",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.22.0"
+  }
+}

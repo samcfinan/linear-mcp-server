@@ -1,0 +1,13 @@
+{
+  "extends": "@tsconfig/node22/tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "sourceMap": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": false
+  },
+  "include": ["index.ts"],
+  "exclude": ["node_modules"]
+}
