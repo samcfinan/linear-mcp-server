@@ -59,3 +59,63 @@ NOTE: Claude does not work well with nvm environments. Make sure to reference th
 * `view-issue-relations` - View all relations for a given issue
 * `delete-issue-relation` - Delete a relation between two issues
 
+
+
+## Example
+
+```
+User:
+Break the Implement Contact API Endpoints issue into multiple issues, one for each endpoint
+
+Claude:
+I'll break down the API endpoints issue into separate issues for each endpoint and create the appropriate relationships.
+
+
+View result from create-issue from linear (local)
+
+
+View result from create-issue from linear (local)
+
+
+View result from create-issue from linear (local)
+
+
+View result from create-issue from linear (local)
+
+
+View result from create-issue from linear (local)
+
+Now let's create the relationships between these new issues and the existing ones. First, they all depend on the TypeScript Models issue:
+
+
+View result from create-issue-relation from linear (local)
+
+
+View result from create-issue-relation from linear (local)
+
+
+View result from create-issue-relation from linear (local)
+
+
+View result from create-issue-relation from linear (local)
+
+
+View result from create-issue-relation from linear (local)
+
+I've created five separate issues for each endpoint and set up their relationships:
+
+GET /contacts (List) - d1aae514
+GET /contacts/:id (Single) - 01850d5d
+POST /contacts (Create) - 2e0f2b75
+PUT /contacts/:id (Update) - d22b143d
+DELETE /contacts/:id (Delete) - dde30779
+All of these endpoints depend on the TypeScript Models issue (2c38c6ee) being completed first.
+
+The UI Components issue (dd214884) and Search/Filter issue (81a33a29) now should depend on the completion of these endpoint issues, particularly the GET endpoints.
+
+Would you like me to:
+
+Create those additional relationships with the UI Components?
+Add any specific cross-dependencies between the endpoints themselves?
+Break down any of these endpoint issues into more granular tasks?
+```
