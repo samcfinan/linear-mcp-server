@@ -42,8 +42,6 @@ const defaultPrompt = {
   ],
 }
 
-const PRIORITY_LABELS = ["No priority", "Urgent", "High", "Medium", "Low"]
-
 // Create an MCP server
 const server = new McpServer({
   name: "linear",
@@ -151,7 +149,7 @@ server.tool(
       return {
         content: [
           {
-            type: "text" as const,
+            type: "text",
             text: `Project created successfully. ID: ${createdProject.id}`,
           },
         ],
@@ -168,7 +166,7 @@ server.tool("view-project", { id: z.string() }, async ({ id }) => {
     return {
       content: [
         {
-          type: "text" as const,
+          type: "text",
           text: JSON.stringify(project, null, 2),
         },
       ],
@@ -201,7 +199,7 @@ server.tool(
       return {
         content: [
           {
-            type: "text" as const,
+            type: "text",
             text: "Project updated successfully",
           },
         ],
@@ -232,7 +230,7 @@ server.tool(
       return {
         content: [
           {
-            type: "text" as const,
+            type: "text",
             text: `Initiative created successfully. ID: ${createdInitiative.id}`,
           },
         ],
@@ -249,7 +247,7 @@ server.tool("view-initiative", { id: z.string() }, async ({ id }) => {
     return {
       content: [
         {
-          type: "text" as const,
+          type: "text",
           text: JSON.stringify(initiative, null, 2),
         },
       ],
@@ -273,7 +271,7 @@ server.tool(
       return {
         content: [
           {
-            type: "text" as const,
+            type: "text",
             text: "Initiative updated successfully",
           },
         ],
@@ -309,7 +307,7 @@ server.tool(
       return {
         content: [
           {
-            type: "text" as const,
+            type: "text",
             text: `Issue created successfully. ID: ${createdIssue.id}`,
           },
         ],
@@ -326,7 +324,7 @@ server.tool("view-issue", { id: z.string() }, async ({ id }) => {
     return {
       content: [
         {
-          type: "text" as const,
+          type: "text",
           text: JSON.stringify(issue, null, 2),
         },
       ],
@@ -352,7 +350,7 @@ server.tool(
       return {
         content: [
           {
-            type: "text" as const,
+            type: "text",
             text: "Issue updated successfully",
           },
         ],
@@ -377,7 +375,7 @@ server.tool("search-issues", { query: z.string() }, async ({ query }) => {
     return {
       content: [
         {
-          type: "text" as const,
+          type: "text",
           text: JSON.stringify(issuesList, null, 2),
         },
       ],
@@ -406,7 +404,7 @@ server.tool(
       return {
         content: [
           {
-            type: "text" as const,
+            type: "text",
             text: "Issue relation created successfully",
           },
         ],
@@ -462,7 +460,7 @@ server.tool(
       return {
         content: [
           {
-            type: "text" as const,
+            type: "text",
             text: JSON.stringify(validRelations, null, 2),
           },
         ],
@@ -517,7 +515,7 @@ server.tool(
       return {
         content: [
           {
-            type: "text" as const,
+            type: "text",
             text: "Issue relation deleted successfully",
           },
         ],
