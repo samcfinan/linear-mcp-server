@@ -1,5 +1,7 @@
 # Linear MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@samcfinan/linear-mcp-server)](https://smithery.ai/server/@samcfinan/linear-mcp-server)
+
 A [Model Context Protocol](https://github.com/modelcontextprotocol) server for the [Linear API](https://developers.linear.app/docs/graphql/working-with-the-graphql-api).
 
 Intended to be more feature rich than existing Linear MCP servers and intended for holistic project management via Claude.
@@ -15,6 +17,15 @@ Features:
 
 ## Installation
 
+### Installing via Smithery
+
+To install Linear MCP Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@samcfinan/linear-mcp-server):
+
+```bash
+npx -y @smithery/cli install @samcfinan/linear-mcp-server --client claude
+```
+
+### Manual Installation
 Add server config to Claude Desktop.
 
 NOTE: Claude does not work well with nvm environments. Make sure to reference the version of Node with its absolute path.
